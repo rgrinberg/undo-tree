@@ -4429,4 +4429,7 @@ specifies `saved', and a negative prefix argument specifies
 
 (provide 'undo-tree)
 
+;; Local Variables:
+;; outline-regexp: ";;;+ [^=]"
+;; End:
 ;;; undo-tree.el ends here
