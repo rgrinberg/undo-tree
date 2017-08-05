@@ -757,6 +757,10 @@
 (eval-when-compile (require 'cl))
 (require 'diff)
 
+;; These modes are referenced before being defined.
+(defvar undo-tree-mode)
+(defvar undo-tree-visualizer-selection-mode)
+
 
 
 ;;; =====================================================================
