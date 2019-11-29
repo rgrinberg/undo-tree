@@ -1234,35 +1234,36 @@ in visualizer."
 
 (defun undo-tree-update-menu-bar ()
   "Update `undo-tree-mode' Edit menu items."
-  (if undo-tree-mode
-      (progn
-	;; save old undo menu item, and install undo/redo menu items
-	(setq undo-tree-old-undo-menu-item
-	      (cdr (assq 'undo (lookup-key global-map [menu-bar edit]))))
-	(define-key (lookup-key global-map [menu-bar edit])
-	  [undo] '(menu-item "Undo" undo-tree-undo
-			     :enable (and undo-tree-mode
-					  (not buffer-read-only)
-					  (not (eq t buffer-undo-list))
-					  (not (eq nil buffer-undo-tree))
-					  (undo-tree-node-previous
-					   (undo-tree-current buffer-undo-tree)))
-			     :help "Undo last operation"))
-	(define-key-after (lookup-key global-map [menu-bar edit])
-	  [redo] '(menu-item "Redo" undo-tree-redo
-			     :enable (and undo-tree-mode
-					  (not buffer-read-only)
-					  (not (eq t buffer-undo-list))
-					  (not (eq nil buffer-undo-tree))
-					  (undo-tree-node-next
-					   (undo-tree-current buffer-undo-tree)))
-			     :help "Redo last operation")
-	  'undo))
-    ;; uninstall undo/redo menu items
-    (define-key (lookup-key global-map [menu-bar edit])
-      [undo] undo-tree-old-undo-menu-item)
-    (define-key (lookup-key global-map [menu-bar edit])
-      [redo] nil)))
+  (when-let ((menu-bar-edit (lookup-key global-map [menu-bar edit])))
+    (if undo-tree-mode
+        (progn
+          ;; save old undo menu item, and install undo/redo menu items
+          (setq undo-tree-old-undo-menu-item
+                (cdr (assq 'undo menu-bar-edit)))
+          (define-key menu-bar-edit
+            [undo] '(menu-item "Undo" undo-tree-undo
+                               :enable (and undo-tree-mode
+                                            (not buffer-read-only)
+                                            (not (eq t buffer-undo-list))
+                                            (not (eq nil buffer-undo-tree))
+                                            (undo-tree-node-previous
+                                             (undo-tree-current buffer-undo-tree)))
+                               :help "Undo last operation"))
+          (define-key-after menu-bar-edit
+            [redo] '(menu-item "Redo" undo-tree-redo
+                               :enable (and undo-tree-mode
+                                            (not buffer-read-only)
+                                            (not (eq t buffer-undo-list))
+                                            (not (eq nil buffer-undo-tree))
+                                            (undo-tree-node-next
+                                             (undo-tree-current buffer-undo-tree)))
+                               :help "Redo last operation")
+            'undo))
+      ;; uninstall undo/redo menu items
+      (define-key (lookup-key global-map [menu-bar edit])
+        [undo] undo-tree-old-undo-menu-item)
+      (define-key (lookup-key global-map [menu-bar edit])
+        [redo] nil))))
 
 (add-hook 'menu-bar-update-hook 'undo-tree-update-menu-bar)
 
